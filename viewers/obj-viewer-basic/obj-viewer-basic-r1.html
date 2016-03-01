@@ -119,7 +119,6 @@
 
 // assets
 
-
 		parseHash();
 
 	}
@@ -190,13 +189,15 @@
 
 				addObject( object );
 
-				info.innerHTML = 'name: ' + fileName + '<br>' + '';
+				info.innerHTML = 'File name: ' + fileName + '<br>' + '';
 
 	// console.log( 'object', object );
 
 			}, 
 			function( event ) { 
-				progress.innerHTML = 'loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; } 
+
+				progress.innerHTML = 'Loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; } 
+
 		);
 
 	}

@@ -6,6 +6,7 @@
 [Viewers Read Me]( index.html )
 ===
 
+Simple OBJ file viewer based on [Three.js]( http://threejs.org ).
 
 ### [OBJ Viewer Basic R1]( http://jaanga.github.io/3d-models/viewers/obj-viewer-basic/obj-viewer-basic-r1.html )
 
@@ -25,4 +26,5 @@
 * Supply skyboxes and other backgrounds
 * toggle rotation
 * Toggle wireframe
+* Export files with current parameters such as scale, position and rotation
 
