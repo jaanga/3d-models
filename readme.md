@@ -15,7 +15,7 @@ In order to view the models, you need files viewers.
 Here is a simple viewer - based on [Three.js]( http://threejs.org ) you can use:
 [OBJ Viewer Basic]( http://jaanga.github.io/3d-models/viewers/obj-viewer-basic/obj-viewer-basic-r1.html )
 The links to OBJ files below use this viewer. 
-Further details on the OBJ file viewer available here: [Viewers]( http://aanga.github.io/3d-models/viewers )
+Further details on the OBJ file viewer available here: [Viewers]( http://jaanga.github.io/3d-models/viewers )
 
 ## OBJ files
 These files are hosted at <https://github.com/jaanga/3d-models/>.
