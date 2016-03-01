@@ -2,7 +2,7 @@
 <html lang=en >
 <head>
 <meta charset=utf-8 >
-<title>OBJ Load and Combine R1</title>
+<title>OBJ Viewer Basic R1</title>
 <meta name=viewport content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui' >
 <meta name=description content='' >
 <meta name=keywords content='WebGL,Three.js,Tween.js,JavaScript,GitHub,FOSS,3D,STEM' >
@@ -37,8 +37,12 @@
 
 	var fileName10 = '';
 
-	var object;
-	var geometryObj;
+	var pi = Math.PI, pi2 = 2 * Math.PI, pi05 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;  // degrees / radians
+
+	var object, obj = new THREE.Object3D();
+
+	var rX = rY = rZ = 0;
 
 	var stats, renderer, scene, camera, controls;
 	var geometry, material, mesh;
@@ -68,12 +72,13 @@
 		menu.innerHTML = 
 
 			'<h2>' +
-			'	<a href="" >' + document.title + '</a>' +
-			'	 <a href=http://jaanga.github.io/ >❦</a>' +
+			'	<a href="../../index.html" >' + document.title + '</a>' +
+			'	 <a href=http://jaanga.github.io/3d-models >❦</a>' +
 			'</h2>' +
 			'<p><input type=checkbox onchange=object.material.wireframe=!object.material.wireframe; > Wireframe</p>' +
 /*			'<p>Zoom: <input type=range id=inp max=10 min=0 step=1 value=5 oninput=out.value=inp.value; title="0 to 10: OK" > <output id=out >value</output></p>' +
 */			'<div id=info ></div>' +
+			'<div id=progress ></div>' +
 
 		'';
 
@@ -114,9 +119,60 @@
 
 // assets
 
-		fileName = location.hash ? location.hash.slice( 1 ) : 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
 
-		loadOBJFileByURL( fileName1 );
+		parseHash();
+
+	}
+
+
+	function parseHash() {
+
+		if ( location.hash ) {
+
+			hashes = location.hash.split( '#' );
+
+			for ( var i = 0; i < hashes.length; i++ ) {
+
+				hash = hashes[ i ];
+
+				parameter = hash.slice( 0, 3 );
+				value = parseFloat( hash.slice( 4 ) );
+
+				if ( parameter === 'rox' ) { obj.rotation.x = value * d2r;
+
+					} else if ( parameter === 'roy' ) { obj.rotation.x = value * d2r;
+					} else if ( parameter === 'roz' ) { obj.rotation.y = value * d2r;
+
+					} else if ( parameter === 'pox' ) { obj.position.x = value;
+					} else if ( parameter === 'poy' ) { obj.position.y = value;
+					} else if ( parameter === 'poz' ) { obj.position.z = value;
+
+					} else if ( parameter === 'scx' ) { obj.scale.x = value;
+					} else if ( parameter === 'scy' ) { obj.scale.y = value;
+					} else if ( parameter === 'scz' ) { obj.scale.z = value;
+
+					} else if ( parameter === 'cpx' ) { camera.position.x = value;
+					} else if ( parameter === 'cpy' ) { camera.position.y = value;
+					} else if ( parameter === 'cpz' ) { camera.position.z = value;
+
+					} else if ( parameter === 'ctx' ) { controls.target.x = value;
+					} else if ( parameter === 'cty' ) { controls.target.y = value;
+					} else if ( parameter === 'ctz' ) { controls.target.z = value;
+
+				}
+
+			}
+
+			fileName = hashes[ 1 ];
+
+		} else {
+
+			fileName = 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj#scx=0.3#scy=0.3#scz=0.3';
+
+		}
+
+
+		loadOBJFileByURL( fileName )
 
 	}
 
@@ -127,27 +183,23 @@
 
 		var loader = new THREE.OBJLoader();
 		loader.crossOrigin = 'anonymous';
-		loader.load( fileName, function ( obj ) {
+		loader.load( fileName, 
+		function ( obj ) {
 
 			object = obj;
 
 			addObject( object );
 
-			info.innerHTML = 'name: ' + fileName + '<br>' +
-			'';
+			info.innerHTML = 'name: ' + fileName + '<br>' + '';
 
 // console.log( 'object', object );
 
-		} );
+		}, 
+		function( event ) { progress.innerHTML = 'loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; } );
 
 	}
 
 	function addObject( object ) {
-
-//		var bbox;
- 
-		bbox = new THREE.Box3();
-
 
 		object.traverse( function ( child ) {
 
@@ -157,33 +209,18 @@
 //				child.receiveShadow = true;
 				child.material = new THREE.MeshNormalMaterial();
 
-				if ( child.geometry.attributes.position.array.length > 0 ) {
-
-					child.geometry.computeBoundingBox();
-					bbox.union( child.geometry.boundingBox );
-
-//console.log( '', child.geometry.boundingBox );
-
-
-				}
-
 			}
 
 		} );
 
-
-		delta = bbox.max.sub( bbox.min );
-		radius = bbox.getBoundingSphere().radius;
-		s = 100 / radius;
-		os = object.scale; 
-		os.set( s * os.x, s * os.y, s * os.z ); 
-//		object.position.set( 0, -0.5 * s * delta.y, 0 );
-
-console.log( '', radius );
-
+		object.scale.copy( obj.scale );
+		object.rotation.copy( obj.rotation );
+		object.position.copy( obj.position );
 		scene.add( object );
 
 	}
+
+
 
 	function onWindowResize() {
 
