@@ -72,16 +72,6 @@
 			'	 <a href=http://jaanga.github.io/ >❦</a>' +
 			'</h2>' +
 			'<p><input type=checkbox onchange=object.material.wireframe=!object.material.wireframe; > Wireframe</p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName1); >female / remote</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName2); >Nefetiti</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName3); >heart</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName4); >tree</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName5); >blackjack</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName6); >A-330</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName7); >factory</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName8); >Nefertiti</button></p>' +
-			'<p><button onclick=loadOBJFileByURL(fileName9); >Sydney</button></p>' +
-//			'<p><button onclick=loadOBJFileByURL(fileName10); >factory</button></p>' +
 /*			'<p>Zoom: <input type=range id=inp max=10 min=0 step=1 value=5 oninput=out.value=inp.value; title="0 to 10: OK" > <output id=out >value</output></p>' +
 */			'<div id=info ></div>' +
 
@@ -123,6 +113,8 @@
 		scene.add( axisHelper );
 
 // assets
+
+		fileName = location.hash ? location.hash.slice( 1 ) : 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
 
 		loadOBJFileByURL( fileName1 );
 
