@@ -70,3 +70,11 @@ These files are hosted at <https://github.com/mrdoob/three.js/tree/master/exampl
 
 ### [Tree]( ./viewers/obj-viewer-basic/obj-viewer-basic-r1.html#http://mrdoob.github.io/three.js/examples/models/obj/tree.obj#scx=60#scy=60#scz=60 )
 * 127 KB
+
+
+Sources
+http://tf3dm.com/3d-models/aircraft
+
+Lists 634 models! Many are duplicates, but a good place to start.
+
+In any case, google the name of the aircraft plus 'obj' and stuff appears

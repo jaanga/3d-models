@@ -28,3 +28,9 @@ Simple OBJ file viewer based on [Three.js]( http://threejs.org ).
 * Toggle wireframe
 * Export files with current parameters such as scale, position and rotation
 
+
+## Three.js OBJ support
+
+<https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/OBJLoader.js>  
+
+<https://github.com/mrdoob/three.js/blob/master/examples/js/exporters/OBJExporter.js>

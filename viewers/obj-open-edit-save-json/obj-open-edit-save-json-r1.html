@@ -1,0 +1,305 @@
+﻿<!doctype html>
+<html lang=en >
+<head>
+<meta charset=utf-8 >
+<title>OBJ Open Edit Save JSON R1</title>
+<meta name=viewport content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui' >
+<meta name=description content='' >
+<meta name=keywords content='WebGL,Three.js,Tween.js,JavaScript,GitHub,FOSS,3D,STEM' >
+<meta name=date content='' >
+</head>
+<body>
+
+<script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/controls/OrbitControls.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/loaders/OBJLoader.js ></script>
+<!--
+<script src=http://rawgit.com/mrdoob/three.js/dev/build/three.min.js ></script>
+<script src=http://rawgit.com/mrdoob/three.js/dev/examples/js/controls/OrbitControls.js ></script>
+<script src=http://rawgit.com/mrdoob/three.js/dev/examples/js/libs/stats.min.js ></script>
+-->
+<script>
+
+	var fileName1 = 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
+	var fileName2 = 'http://jaanga.github.io/3d-models/obj/nefertiti/nefertiti.obj';
+	var fileName2 = '../../models/Saab-37_Viggen/Saab-37_Viggen.obj';
+	var fileName3 = '../../models/HumanHeart.obj';
+	var fileName4 = '../../models/tree.obj';
+//	var fileName = '';
+
+	var fileName5 = 'C:/temp/aircraft-and-models/3divxfwhvmv4-Tu-160_Blackjack/Tu-160 Blackjack/blackjack.obj';
+	var fileName6 = 'C:/temp/aircraft-and-models/Airbus 330/Airbus 330/A-330.obj';
+	var fileName7 = 'C:/temp/aircraft-and-models/Factory Complex/Factory.obj';
+
+
+	var fileName9 = 'C:/temp/aircraft-and-models/Sidney_opera/SYDNEY.obj';
+
+	var fileName10 = '';
+
+	var pi = Math.PI, pi2 = 2 * Math.PI, pi05 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;  // degrees / radians
+
+	var object, obj = new THREE.Object3D();
+
+	var rX = rY = rZ = 0;
+
+	var stats, renderer, scene, camera, controls;
+	var geometry, material, mesh;
+
+	init();
+	animate();
+
+	function init() {
+
+		var css = document.head.appendChild( document.createElement( 'style' ) );
+		css.innerHTML =
+
+			'body { font: 12pt monospace; margin: 0; overflow: hidden; }' +
+			'a {text-decoration: none; }' +
+			'h2 { margin: 0 }' +
+
+			'button { background-color: #eee; border: 2px #eee solid; color: #888; }' +
+
+/*			'input[type=range] { -webkit-appearance: none; -moz-appearance: none; background-color: silver; height: 20px; width: 180px; }' +
+			'input[type=range]::-moz-range-thumb { -moz-appearance: none; background-color: #888; height: 20px; width: 10px; }' +
+			'input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #888; height: 20px; opacity: 0.85; width: 10px; }' +
+*/
+		'';
+
+		var menu = document.body.appendChild( document.createElement( 'div' ) );
+		menu.style.cssText = `margin: 0 20px; max-width: 300px; position: absolute; `;
+		menu.innerHTML = 
+
+			'<h2>' +
+			'	<a href="" >' + document.title + '</a>' +
+			'	 <a href=http://jaanga.github.io/3d-models >❦</a>' +
+			'</h2>' +
+			'<p><input type=file id=inpFile onchange=openFile(this); /></p>' +
+			'<textarea id=txtarea style=height:500px;overflow:auto;width:100%; ></textarea>' +
+//			'<p><input type=checkbox onchange=object.material.wireframe=!object.material.wireframe; > Wireframe</p>' +
+/*			'<p>Zoom: <input type=range id=inp max=10 min=0 step=1 value=5 oninput=out.value=inp.value; title="0 to 10: OK" > <output id=out >value</output></p>' +
+*/
+			'<div id=info ></div>' +
+			'<div id=progress ></div>' +
+
+		'';
+
+		stats = new Stats();
+		stats.domElement.style.cssText = `position: absolute; right: 0; top: 0; z-index: 100; `;
+		document.body.appendChild( stats.domElement );
+
+		window.addEventListener( 'resize', onWindowResize, false );
+
+		renderer = new THREE.WebGLRenderer( {  alpha: 1, antialias: true }  );
+//		renderer.setClearColor( 0xf0f0f0 );
+//		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.position.set( 100, 100, 100 );
+
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.maxDistance = 800;
+
+		scene = new THREE.Scene();
+
+// helpers
+
+		geometry = new THREE.BoxGeometry( 100, 2, 100 );
+		material = new THREE.MeshNormalMaterial();
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -11, 0 );
+		scene.add( mesh );
+
+		var gridHelper = new THREE.GridHelper( 50, 10 );
+		gridHelper.position.set( 0, -10, 0 );
+		scene.add( gridHelper );
+
+		var axisHelper = new THREE.AxisHelper( 50 );
+		scene.add( axisHelper );
+
+// assets
+
+		parseHash();
+
+	}
+
+
+	function parseHash() {
+
+		if ( location.hash ) {
+
+			hashes = location.hash.split( '#' );
+
+			for ( var i = 0; i < hashes.length; i++ ) {
+
+				hash = hashes[ i ];
+
+				parameter = hash.slice( 0, 3 );
+				value = parseFloat( hash.slice( 4 ) );
+
+				if ( parameter === 'rox' ) { obj.rotation.x = value * d2r;
+
+					} else if ( parameter === 'roy' ) { obj.rotation.x = value * d2r;
+					} else if ( parameter === 'roz' ) { obj.rotation.y = value * d2r;
+
+					} else if ( parameter === 'pox' ) { obj.position.x = value;
+					} else if ( parameter === 'poy' ) { obj.position.y = value;
+					} else if ( parameter === 'poz' ) { obj.position.z = value;
+
+					} else if ( parameter === 'scx' ) { obj.scale.x = value;
+					} else if ( parameter === 'scy' ) { obj.scale.y = value;
+					} else if ( parameter === 'scz' ) { obj.scale.z = value;
+
+					} else if ( parameter === 'cpx' ) { camera.position.x = value;
+					} else if ( parameter === 'cpy' ) { camera.position.y = value;
+					} else if ( parameter === 'cpz' ) { camera.position.z = value;
+
+					} else if ( parameter === 'ctx' ) { controls.target.x = value;
+					} else if ( parameter === 'cty' ) { controls.target.y = value;
+					} else if ( parameter === 'ctz' ) { controls.target.z = value;
+
+				}
+
+			}
+
+			fileName = hashes[ 1 ];
+
+		} else {
+
+			fileName = 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
+			obj.scale.x = obj.scale.y = obj.scale.z = 0.3;
+
+		}
+
+		loadOBJFileByURL( fileName )
+
+	}
+
+
+	function loadOBJFileByURL( fileName ) {
+
+		scene.remove( object );
+
+		var loader = new THREE.OBJLoader();
+		loader.crossOrigin = 'anonymous';
+		loader.load( fileName, 
+			function ( obj ) {
+
+				object = obj;
+
+				addObject( object );
+
+				info.innerHTML = 'File name: ' + fileName + '<br>' + '';
+
+	// console.log( 'object', object );
+
+			}, 
+			function( event ) { 
+
+				progress.innerHTML = 'Loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; } 
+
+		);
+
+	}
+
+	function addObject( object ) {
+
+		object.traverse( function ( child ) {
+
+			if ( child instanceof THREE.Mesh ) {
+
+//				child.castShadow = true
+//				child.receiveShadow = true;
+				child.material = new THREE.MeshNormalMaterial();
+
+			}
+
+		} );
+
+		object.scale.copy( obj.scale );
+		object.rotation.copy( obj.rotation );
+		object.position.copy( obj.position );
+		scene.add( object );
+
+	}
+
+	function openFile( that) {
+
+		var reader = new FileReader();
+		reader.onloadend = function( event ) {
+//			data = event.target.result;
+			data =  reader.result;
+			txtarea.innerHTML = data;
+
+			info.innerHTML = 'name: ' + that.files[0].name + '<br>size: ' + that.files[0].size +
+				'<br>type: ' + that.files[0].type + '<br>modified: ' + that.files[0].lastModifiedDate;
+
+console.log( '', that );
+
+			loadFileOBJByContent( that );
+
+		}
+
+		reader.readAsText( that.files[0] );
+
+	}
+
+	function loadFileOBJByContent( fileObject ) {
+
+		var file = fileObject.files[ 0 ];
+		var reader = new FileReader();
+
+		reader.onload = function ( event ) {
+
+			loader = new THREE.OBJLoader()
+			loader.crossOrigin = 'anonymous';
+			object = loader.parse( reader.result );
+
+console.log( object  );
+
+			addObject( object );
+
+			msg.innerHTML = 'name: ' + file.name + '<br>' +
+				'size: ' + file.size + '<br>' +
+				'type: ' + file.type + '<br>' +
+				'modified: ' + file.lastModifiedDate +
+			'';
+
+		};
+
+		if ( reader.readAsBinaryString !== undefined ) {
+
+			reader.readAsBinaryString( file );
+
+		} else {
+
+			reader.readAsArrayBuffer( file );
+
+		}
+
+	}
+
+	function onWindowResize() {
+
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+	}
+
+	function animate() {
+
+		requestAnimationFrame( animate );
+		controls.update();
+		stats.update();
+		renderer.render( scene, camera );
+
+	}
+
+</script>
+</body>
+</html>
