@@ -13,7 +13,7 @@ All the models are CORS-enabled because they are hosted on GitHub.
 
 In order to view the models, you need files viewers.
 Here is a simple viewer - based on [Three.js]( http://threejs.org ) you can use:
-[OBJ Viewer Basic]( http://jaanga.github.io/3d-models/viewers/obj-viewer-basic/obj-viewer-basic-r1.html )
+[OBJ Viewer Basic]( http://jaanga.github.io/3d-models/viewers/obj-viewer-basic/ )
 The links to OBJ files below use this viewer. 
 Further details on the OBJ file viewer available here: [Viewers]( http://jaanga.github.io/3d-models/viewers )
 
