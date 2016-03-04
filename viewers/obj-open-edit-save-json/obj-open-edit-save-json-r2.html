@@ -1,0 +1,459 @@
+﻿<!doctype html>
+<html lang=en >
+<head>
+<title>OBJ Open Edit Save JSON R2</title>
+<meta charset=utf-8 />
+<meta name=viewport content='width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0' />
+</head>
+<body>
+<script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/controls/OrbitControls.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src=http://mrdoob.github.io/three.js/examples/js/loaders/OBJLoader.js ></script>
+<script>
+
+//	var fileName = '../models/tree.obj';
+	var fileName = '../models/female02.obj';
+	var fileName = 'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
+//	var fileName = 'http://mrdoob.github.io/three.js/examples/obj/leeperrysmith/LeePerrySmith.obj';
+	var hashDefault = 'url=http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj';
+//	var hashDefault = 'http://mrdoob.github.io/three.js/examples/obj/walt/WaltHead.obj';
+
+	var hashDefault =  'url=http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj#roy=90#scx=0.3#scy=0.3#scz=0.3';
+
+	var parameters = new THREE.Object3D();
+	var object;
+
+	var camX = camY = camZ = 100;
+	var tarX = tarY = tarZ = 0;
+
+	var css, menu, stats, renderer, scene, camera, controls;
+	var geometry, material, mesh;
+
+	init();
+	animate();
+
+	function init() {
+
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 
+
+			'body { font: 12pt monospace; margin: 0; overflow: hidden; }' +
+			'h2 { margin: 0; }' +
+			'a { text-decoration: none; }' +
+			'button, input[type=button] { background-color: #eee; border: 2px #eee solid; color: #888; }' +
+
+			'input[type=range] { -webkit-appearance: none; -moz-appearance: none; background-color: silver; width: 160px; }' +
+			'input[type=range]::-moz-range-thumb { background-color: #888; border-radius: 0; width: 10px; }' +
+			'input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #888; height: 20px; width: 10px; }' +
+
+			'#bars { color: pink; cursor: pointer; font-size: 24pt; text-decoration: none; }' +
+			'#hamburger { left: 325px; position: absolute; top: 20px; transition: left 1s; }' +
+			'#inpScale { width: 50px; }' +
+			'#inpRotX, #inpRotY, #inpRotZ,#inpPosX, #inpPosY, #inpPosZ, #inpCamX, #inpCamY, #inpCamZ, #inpTarX, #inpTarY, #inpTarZ { width: 50px; }' +
+			'#menu { background-color: #eee; border: 1px #ccc solid; left: -324px; max-height: ' + ( window.innerHeight - 10 ) + 'px; ' +
+				'opacity: 0.85; overflow: auto; padding: 0 10px; position: absolute; top: -20px; transition: left 1s; width: 300px; }' +
+
+		'';
+
+		var hamburger = document.body.appendChild( document.createElement( 'div' ) );
+		hamburger.id = 'hamburger';
+		hamburger.innerHTML = '<div id=bars >☰</div>';
+		bars.onclick = function() { hamburger.style.left = hamburger.style.left === "0px" ? "325px" : 0; };
+
+		var menu = hamburger.appendChild( document.createElement( 'div' ) );
+		menu.id = 'menu';
+		menu.innerHTML = 
+
+			'<h2>' +
+			'	<a href="" >' + document.title + '</a>' +
+			'	<a href=http://jaanga.github.io/3d-models/viewers >&#x24D8;</a>' +
+			'</h2>' +
+			'<p>Drag and drop files over this menu or <input type=file onchange=loadFileOBJByContent(this); /><p>' +
+			'<p>Scale: <input id=inpScale value=1 ></p>' +
+			'<p>' +
+				'Rotation:<br>' +
+				'x: <input id=inpRotX value=0 > y: <input id=inpRotY value=0 > z: <input id=inpRotZ value=0 >' +
+			'</p>' +
+			'<p>' +
+				'Position:<br>' +
+				'x: <input id=inpPosX value=0 > y: <input id=inpPosY value=0 > z: <input id=inpPosZ value=0 >' +
+			'</p>' +
+			'<p>' +
+				'Camera position:<br>' +
+				'x: <input id=inpCamX value=' + camX + ' > y: <input id=inpCamY value=' + camY + ' > z: <input id=inpCamZ value=' + camZ + ' >' +
+			'</p>' +
+			'<p>' +
+				'Camera target:<br>' +
+				'x: <input id=inpTarX value=' + tarX + ' > y: <input id=inpTarY value=' + tarY + ' > z: <input id=inpTarZ value=' + tarZ + ' >' +
+			'</p>' +
+			'<p><input type=checkbox id=chkWireframe > Wireframe</p>' +
+			'<p>Clear screen on open <input type=checkbox id=chkClearScreen checked ></p>' +
+			'<p><button onclick=updateObject();  >Update object</button></p>' +
+			'<textarea id=txtArea style=height:300px;overflow:auto;width:100%; ></textarea>' +
+			'<p><button onclick=saveFile(); >Save File</button></p>' +
+			'<div id=info ></div>' +
+		'';
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; z-index: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( camX, camY, camZ );
+
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+		scene = new THREE.Scene();
+
+// axes
+		var axisHelper = new THREE.AxisHelper( 50 );
+		scene.add( axisHelper );
+
+		window.addEventListener( 'resize', onWindowResize, false );
+
+		menu.addEventListener( "dragover", function(e){e.preventDefault();}, true );
+		menu.addEventListener( 'drop', drop, false );
+
+		material = new THREE.MeshNormalMaterial( { side: 2 } );
+
+console.log( 'lf', location.hash  );
+
+		if ( location.hash === '' ) {
+
+			location.hash = hashDefault;
+
+		}
+
+		parseHash();
+
+//		addLights( 200 );
+//		addShadows();
+
+
+	}
+
+	function parseHash() {
+
+		hashes = location.hash.split( '#' );
+
+		for ( var i = 0; i < hashes.length; i++ ) {
+
+			hash = hashes[ i ];
+
+			parameter = hash.slice( 0, 3 );
+			value = parseFloat( hash.slice( 4 ) );
+
+			if ( parameter === 'rox' ) { inpRotX.value = value;
+
+				} else if ( parameter === 'roy' ) { inpRotY.value = value;
+				} else if ( parameter === 'roz' ) { inpRotZ.value = value;
+
+				} else if ( parameter === 'pox' ) { inpPosX.value.x = value;
+				} else if ( parameter === 'poy' ) { inpPosY.value.y = value;
+				} else if ( parameter === 'poz' ) { inpPosZ.value.z = value;
+
+				} else if ( parameter === 'scx' ) { inpScale.value = value;
+				} else if ( parameter === 'scy' ) { inpScale.value = value;
+				} else if ( parameter === 'scz' ) { inpScale.value = value;
+
+				} else if ( parameter === 'cpx' ) { camera.position.x = value;
+				} else if ( parameter === 'cpy' ) { camera.position.y = value;
+				} else if ( parameter === 'cpz' ) { camera.position.z = value;
+
+				} else if ( parameter === 'ctx' ) { controls.target.x = value;
+				} else if ( parameter === 'cty' ) { controls.target.y = value;
+				} else if ( parameter === 'ctz' ) { controls.target.z = value;
+
+				} else if ( parameter === 'url' ) { fileName = hash.slice( 4 );
+
+			}
+
+		}
+
+		loadOBJFileByURL( fileName )
+
+	}
+
+
+	function drop( event ) {
+
+		event.preventDefault(); 
+
+		fileName = event.dataTransfer.getData( 'URL' );
+
+		if ( fileName ) {
+
+			loadOBJFileByURL( fileName );
+
+		} else {
+
+			loadFileOBJByContent( event.dataTransfer );
+
+		}
+
+	}
+
+	function loadOBJFileByURL( fileName ) {
+
+//		var loader;
+		loader = new THREE.OBJLoader();
+		loader.crossOrigin = 'anonymous';
+		loader.load( fileName, function ( obj ) {
+
+			object = obj;
+			addObject( object );
+
+//			txtArea.innerHTML = JSON.stringify( object.toJSON() );
+
+			info.innerHTML = '<h3>File name: ' + fileName.split('/').pop() + '</h3>';
+
+//console.log( 'object', object );
+
+		} );
+
+	}
+
+	function loadFileOBJByContent( fileObject ) {
+
+		var file = fileObject.files[ 0 ];
+		var reader = new FileReader();
+
+		reader.onload = function ( event ) {
+
+			checkClearScreen();
+
+			loader = new THREE.OBJLoader()
+			loader.crossOrigin = 'anonymous';
+			object = loader.parse( reader.result );
+
+//console.log( object  );
+
+			addObject( object );
+
+			data =  reader.result;
+			txtArea.innerHTML = data;
+
+			info.innerHTML = 'name: ' + file.name + '<br>' +
+				'size: ' + file.size + '<br>' +
+				'type: ' + file.type + '<br>' +
+				'modified: ' + file.lastModifiedDate +
+			'';
+
+
+			updateHash();
+
+		};
+
+		if ( reader.readAsBinaryString !== undefined ) {
+
+			reader.readAsBinaryString( file );
+
+		} else {
+
+			reader.readAsArrayBuffer( file );
+
+		}
+
+	}
+
+	function addObject( object ) {
+
+		object.traverse( function ( child ) {
+
+			if ( child instanceof THREE.Mesh ) {
+
+				child.castShadow = child.receiveShadow = true;
+				child.material = material;
+				child.material.wireframe = chkWireframe.checked;
+				child.material.needsUpdate = true;
+
+			}
+
+		} );
+
+		s = parseFloat( inpScale.value );
+		object.scale.set( s, s, s );
+
+		var d2r = Math.PI / 180;
+		rX = parseFloat( inpRotX.value ) * d2r;
+		rY = parseFloat( inpRotY.value ) * d2r;
+		rZ = parseFloat( inpRotZ.value ) * d2r;
+		object.rotation.set( rX, rY, rZ );
+
+		pX = parseFloat( inpPosX.value );
+		pY = parseFloat( inpPosY.value );
+		pZ = parseFloat( inpPosZ.value );
+		object.position.set( pX, pY, pZ );
+
+		object.updateMatrixWorld();
+
+		scene.add( object );
+ 
+console.log( '', object.children[ 1 ].geometry.attributes.position );
+
+	}
+
+	function checkClearScreen() {
+
+		if ( chkClearScreen.checked === true ) {
+
+			scene.remove( object );
+//			controls.reset();
+
+		}
+
+	}
+
+	function updateObject() {
+
+
+		addObject( object );
+
+	}
+
+	function updateHash() {
+
+		text = '';
+
+		if ( inpScale.value !== '' ) {
+
+			text += 'scx=' + inpScale.value + '#scy=' + inpScale.value + '#scz=' + inpScale.value + '';
+
+		}
+
+		text += inpRotX.value !== '1' ? '#rox=' + inpRotX.value : '';
+		text += inpRotY.value !== '1' ? '#roy=' + inpRotY.value : '';
+		text += inpRotZ.value !== '1' ? '#roz=' + inpRotZ.value : '';
+
+		text += inpPosX.value !== '0' ? '#pox=' + inpPosX.value : '';
+		text += inpPosY.value !== '0' ? '#poy=' + inpPosY.value : '';
+		text += inpPosZ.value !== '0' ? '#poz=' + inpPosZ.value : '';
+
+		text += inpCamX.value !== camX ? '#cpx=' + inpCamX.value : '';
+		text += inpCamY.value !== camY ? '#cpy=' + inpCamY.value : '';
+		text += inpCamZ.value !== camZ ? '#cpz=' + inpCamZ.value : '';
+
+		text += inpTarX.value !== '0' ? '#ctx=' + inpTarX.value : '';
+		text += inpTarY.value !== '0' ? '#cty=' + inpTarY.value : '';
+		text += inpTarZ.value !== '0' ? '#ctz=' + inpTarZ.value : '';
+
+		location.hash = text;
+
+	}
+
+	function saveFile() {
+
+		var blob, a;
+
+		blob = new Blob( [ JSON.stringify( object.toJSON() ) ] );
+		a = document.body.appendChild( document.createElement( 'a' ) );
+		a.href = window.URL.createObjectURL( blob );
+		a.download =  fileName.split('/').pop().replace( /\.obj|\.OBJ/, '.json' );
+		a.click();
+		delete a;
+
+	}
+
+	function addLights( size ) {
+
+// 2016-02-21 ~ template-threejs-lights-r2.html
+
+		var size = size ? size : 100;
+		var lightAmbient, lightDirectional, lightPoint;
+
+
+		lightAmbient = new THREE.AmbientLight( 0x444444 );
+		scene.add( lightAmbient );
+
+
+		lightDirectional = new THREE.DirectionalLight( 0xffffff, 0.5 );
+		lightDirectional.position.set( -size, size, size );
+
+		var d = size;
+		lightDirectional.shadow.camera.left = -d;
+		lightDirectional.shadow.camera.right = d;
+		lightDirectional.shadow.camera.top = d;
+		lightDirectional.shadow.camera.bottom = -d;
+
+		lightDirectional.shadow.camera.near = 0;
+		lightDirectional.shadow.camera.far = 3 * size;
+
+// helps stop appearance of grid lines in objects
+		lightDirectional.shadow.bias = -0.001; // default 0 ~ distance from corners?
+
+		lightDirectional.shadow.mapSize.width = 2048;  // default 512
+		lightDirectional.shadow.mapSize.height = 2048;
+
+		lightDirectional.castShadow = true;
+		scene.add( lightDirectional );
+
+		scene.add( new THREE.CameraHelper( lightDirectional.shadow.camera ) );
+
+		lightPoint = new THREE.PointLight( 0xffffff, 0.5 );
+		camera.add( lightPoint );
+		lightPoint.position = new THREE.Vector3( 0, 0, 1 );
+		scene.add( camera );
+
+	}
+
+	function addShadows() {
+
+// 2016-02-21 ~ add-lights/template-threejs-lights-r2.html
+
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.cullFace = THREE.CullFaceBack;
+		renderer.gammaInput = true;
+		renderer.gammaOutput = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+		scene.traverse( function ( child ) {
+
+			if ( child instanceof THREE.Mesh ) {
+
+				child.castShadow = true
+				child.receiveShadow = true;
+				child.material.needsUpdate = true;
+				child.material.wireframe = chkWireframe.checked
+
+			}
+
+		} );
+
+	}
+
+	function onWindowResize() {
+
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+	}
+
+	function animate() {
+
+		requestAnimationFrame( animate );
+		controls.update();
+		stats.update();
+		renderer.render( scene, camera );
+
+		inpCamX.value = camera.position.x.toFixed();
+		inpCamY.value = camera.position.y.toFixed();
+		inpCamZ.value = camera.position.z.toFixed();
+
+		inpTarX.value = controls.target.x.toFixed();
+		inpTarY.value = controls.target.y.toFixed();
+		inpTarZ.value = controls.target.z.toFixed();
+
+		updateHash();
+
+	}
+
+</script>
+</body>
+</html>

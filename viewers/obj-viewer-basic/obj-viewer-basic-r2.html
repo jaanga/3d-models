@@ -23,11 +23,7 @@
 
 	var fileNameDefault =  'http://mrdoob.github.io/three.js/examples/obj/female02/female02.obj#scx=0.3#scy=0.3#scz=0.3';
 
-	var d2r = Math.PI / 180; 
-
-	var object, parameters = new THREE.Object3D();
-
-	var rX = rY = rZ = 0;
+	var parameters = new THREE.Object3D();
 
 	var stats, renderer, scene, camera, controls;
 	var geometry, material, mesh;
@@ -48,7 +44,7 @@
 
 		var menu = document.body.appendChild( document.createElement( 'div' ) );
 		menu.style.cssText = `margin: 0 20px; position: absolute; `;
-		menu.innerHTML = 
+		menu.innerHTML =
 
 			'<h2>' +
 			'	<a href="../../index.html" >' + document.title + '</a>' +
@@ -109,6 +105,9 @@
 
 	function parseHash() {
 
+		var hashes, hash, parameter, value;
+		var d2r = Math.PI / 180;
+
 		hashes = location.hash.split( '#' );
 
 		for ( var i = 0; i < hashes.length; i++ ) {
@@ -154,17 +153,17 @@
 
 		var loader = new THREE.OBJLoader();
 		loader.crossOrigin = 'anonymous';
-		loader.load( fileName, 
+		loader.load( fileName,
 			function ( object ) {
 
 				addObject( object );
 
 				info.innerHTML = 'File name: ' + fileName.split('/').pop() + '<br>' + '';
 
-			}, 
-			function( event ) { 
+			},
+			function( event ) {
 
-				progress.innerHTML = 'Loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; } 
+				progress.innerHTML = 'Loaded: ' + ( ( 100 * event.loaded / event.total ).toFixed() ) + '%'; }
 
 		);
 
