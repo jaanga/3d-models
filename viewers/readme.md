@@ -8,11 +8,7 @@
 
 _Simple OBJ file viewers based on [Three.js]( http://threejs.org )_
 
-All viewers support the following:
 
-* Rotate = one finger / left mouse
-* Zoom = two fingers / scroll wheel
-* Pan = three fingers / right mouse
 
 
 ## [OBJ Viewer Basic]( http://jaanga.github.io/3d-models/viewers/obj-viewer-basic/index.html )
