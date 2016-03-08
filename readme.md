@@ -60,13 +60,13 @@ Clicking on any of the links below opens and displays the file. Once you ar in t
 * Credits and thanks to: <>
 *  KB
 
-### [Villa Savoie]( ./viewers/obj-viewer-basic/index.html#../../obj/architecture/villa-savoie/villa-savoie.obj#px=-30#pz=50#sx=3#sy=3#sz=3 )
-* Credits and thanks to: <>
-*  KB
-
 ### [Sydney Opera House]( ./viewers/obj-viewer-basic/index.html#../../obj/architecture/sydney-opera-house/sydney-opera-house.obj#px=0#pz=90#sx=0.2#sy=0.2#sz=0.2#cx=26#cy=13#cz=70   )
 * Credits and thanks to: <http://tf3dm.com/3d-model/sidney-opera-62699.html>
 * 4 MB
+
+### [Villa Savoye]( ./viewers/obj-viewer-basic/index.html#../../obj/architecture/villa-savoye/villa-savoye.obj#px=-30#pz=50#sx=3#sy=3#sz=3 )
+* Credits and thanks to: <>
+*  KB
 
 
 ## Sculpture
