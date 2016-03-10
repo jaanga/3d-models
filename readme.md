@@ -6,7 +6,7 @@
 ===
 
 It really helps designing, building and testing online 3D apps if you have access to lots of online 3D Models. 
-This repository provides links to 3D models you ca use in your apps from a variety of sources.
+This repository provides links to 3D models you may use in your apps from a variety of sources.
 Some models are hosted in this repository while others are hosted on other Gitub repositories.
 All the models are CORS-enabled because they are hosted on GitHub.
 
