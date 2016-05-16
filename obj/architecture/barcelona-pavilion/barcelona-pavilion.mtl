@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture.jpg
+map_Kd texture.jpg
 
 newmtl material_0
 Ns 96.078431
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_0.jpg
+map_Kd texture_0.jpg
 
 newmtl material_1
 Ns 96.078431
@@ -42,7 +42,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_2.jpg
+map_Kd texture_2.jpg
 
 newmtl material_12
 Ns 96.078431
@@ -63,7 +63,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_3.jpg
+map_Kd texture_3.jpg
 
 newmtl material_14
 Ns 96.078431
@@ -104,7 +104,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_4.jpg
+map_Kd texture_4.jpg
 
 newmtl material_18
 Ns 96.078431
@@ -115,7 +115,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_5.jpg
+map_Kd texture_5.jpg
 
 newmtl material_19
 Ns 96.078431
@@ -126,7 +126,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_6.jpg
+map_Kd texture_6.jpg
 
 newmtl material_2
 Ns 96.078431
@@ -147,7 +147,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_7.jpg
+map_Kd texture_7.jpg
 
 newmtl material_21
 Ns 96.078431
@@ -168,7 +168,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_3.jpg
+map_Kd texture_3.jpg
 
 newmtl material_23
 Ns 96.078431
@@ -189,7 +189,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_1.jpg
+map_Kd texture_1.jpg
 
 newmtl material_4
 Ns 96.078431
@@ -220,7 +220,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture_1.jpg
+map_Kd texture_1.jpg
 
 newmtl material_7
 Ns 96.078431
@@ -231,4 +231,4 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Theo\\Dropbox\\Public\\git-repos\\va3c.github.io\\3d-warehouse-samples\\barcelona-pavilion\\untitled\\texture.jpg
+map_Kd texture.jpg
